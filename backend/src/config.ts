@@ -1,0 +1,1 @@
+export const jwt_secret = '123123$#2*'
