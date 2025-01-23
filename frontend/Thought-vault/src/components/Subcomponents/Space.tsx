@@ -4,12 +4,21 @@ import VaultCard from "./VaultCard";
 import CreateVault from "../models/CreateVault";
 import { Share } from "../models/Share";
 import apiClient from "@/apiClient/apiClient";
+import useFetch from "@/hooks/useFetch";
+
+
+interface Vault{
+    _id:string,
+    name:string,
+    description:string
+}
 
 export default function Space() {
-    const fetchVault = async () => {
+    const fetchVault = async ():Promise<Vault[]> => {
         const response = await apiClient.get('/vaults');
         return response.data
-    } 
+    }
+    const {data,loading} = useFetch<Vault[]>(fetchVault);
     return (
         <div className="p-4 sm:p-8 w-full">
             <div className="flex flex-wrap justify-end items-center space-y-2 sm:space-y-0">
@@ -31,10 +40,10 @@ export default function Space() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
-                <VaultCard title="Education" />
-                <VaultCard title="Sports" />
-                <VaultCard title="Politics" />
-                <VaultCard title="Entertainment"/>
+                {loading ? (<p className="font-bold text-center text-2xl text-gray-500">Loading...</p>):
+                    data && data.length > 0 ? (data.map((vault) => (
+                        <VaultCard key={vault._id} title={vault.name} description={vault.description} />
+                    ))) : (<p className="text-center font-bold text-2xl text-purple-500">There is no Vault. Please Create a vault!</p>) }
             </div>
         </div>
     );

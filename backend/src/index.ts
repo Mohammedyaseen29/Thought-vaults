@@ -78,7 +78,8 @@ app.get("/api/v1/vaults",async(req,res)=>{
         const vaults = await Vault.find({userId});
         res.status(200).json(vaults);
     } catch (error) {
-        res.status(500).json({error})
+        console.error("Error fetching vaults:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 })
 app.post("/api/v1/vaults",async(req,res)=>{
@@ -92,11 +93,12 @@ app.post("/api/v1/vaults",async(req,res)=>{
         const newVault = await Vault.create({
             name,
             description,
-            userId:userId
+            userId,
         })
-        res.status(200).json(newVault);
+        res.status(201).json(newVault);
     } catch (error) {
-        res.status(500).json(error)
+        console.error("Error creating vault:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 })
 app.put("/api/v1/vaults/:vaultId",async(req,res)=>{
