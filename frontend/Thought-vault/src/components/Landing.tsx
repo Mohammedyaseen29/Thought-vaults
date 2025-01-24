@@ -1,7 +1,15 @@
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import { TfiThought } from "react-icons/tfi";
+import { useEffect } from "react";
 
 export default function Landing() {
+    const navigate = useNavigate();
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if(token){
+            navigate('/thoughts')
+        }
+    }, []);
     return (
         <div className="min-h-screen bg-[#0D1117] text-white">
             <header className="container mx-auto px-4 py-6 flex justify-between items-center">

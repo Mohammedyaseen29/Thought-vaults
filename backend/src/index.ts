@@ -262,7 +262,7 @@ app.get("/api/v1/thought/:hash",async(req,res)=>{
         }
         if(link?.isPageLink){
             const vault = await Vault.find({userId:link.userId})
-            res.status(200).json(vault);
+            res.status(200).json({userId:link.userId,vault});
         }
         else{
             const vault = await Vault.findById(link?.resourceId);
