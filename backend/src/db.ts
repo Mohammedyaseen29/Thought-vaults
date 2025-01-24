@@ -32,8 +32,10 @@ const contentSchema = new mongoose.Schema({
 export const Content = mongoose.model("Content",contentSchema);
 
 const linkSchema = new mongoose.Schema({
-    hash : {type:String,required:true},
-    userId:{type:Types.ObjectId,ref:"User",required:true}
+    hash : {type:String,required:true,unique:true},
+    resourceId:{type:Types.ObjectId,ref:"Vault"},
+    isPageLink:{type:Boolean,default:false},
+    userId:{type:Types.ObjectId,ref:"User",required:true},
 })
 
 export const Link = mongoose.model("Link",linkSchema);

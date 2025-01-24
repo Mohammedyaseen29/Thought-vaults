@@ -2,10 +2,11 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import {z} from "zod"
-import { Content, User, Vault } from "./db";
+import { Content, Link, User, Vault } from "./db";
 import { jwt_secret } from "./config";
 import { auth } from "./middleware";
 import cors from "cors"
+import crypto from "crypto";
 
 const app = express();
 
@@ -184,13 +185,99 @@ app.delete("/api/v1/vaults/:vaultId/content/:contentId",(req,res)=>{
 
 })
 
-app.get("/api/v1/thought/:shareLink",(req,res)=>{
-    
+app.post("/api/v1/thought/share-vault",async(req,res)=>{
+    try {
+        const {vaultId} = req.body;
+        const userId = req.userId;
+
+        if(!vaultId){
+            res.status(400).json({message:"VauldId is required!"});
+            return;
+        }
+        const vault = await Vault.findOne({_id:vaultId,userId});
+        if(!vault){
+            res.status(404).json({message:"Vault is not found"});
+            return;
+        }
+        const existingLink = await Link.findOne({userId,resourceId:vaultId,isPageLink:false})
+        if(existingLink){
+            res.status(200).json({
+                message:"Sharing link for the vault already Exist!",
+                shareableLink:`${req.protocol}://${req.get("host")}/api/v1/thought/${existingLink.hash}`
+            })
+            return;
+        }
+        const hash = crypto.randomBytes(16).toString("hex");
+
+        const link = await Link.create({
+            hash,
+            userId,
+            resourceId:vaultId
+        })
+        const shareableLink = `${req.protocol}://${req.get("host")}/api/v1/thought/${hash}`
+
+        res.status(201).json({message:"Vault Shareable link is Created Successfully",shareableLink})
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Internal Server Error!"})
+    }
 })
 
-app.post("/api/v1/thought/share",(req,res)=>{
-
+app.post("api/v1/thought/share-page",async(req,res)=>{
+    try {
+        const userId = req.userId;
+        const existingLink = await Link.findOne({userId,isPageLink:true});
+        if(existingLink){
+            res.status(200).json({
+                message:"Page link is already exist!",
+                shareableLink:`${req.protocol}://${req.get("host")}/api/v1/thought/${existingLink.hash}`
+            })
+            return;
+        }
+        const hash = crypto.randomBytes(16).toString("hex");
+        const link = await Link.create({
+            userId,
+            hash,
+            isPageLink:true,
+        })
+        const shareableLink = `${req.protocol}://${req.get("host")}/api/v1/thought/${hash}`
+        res.status(201).json({message:"Shareable link for this page is created!",shareableLink})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Internal server Error"})
+    }
 })
+
+
+
+
+app.get("/api/v1/thought/:hash",async(req,res)=>{
+    try {
+        const {hash} = req.params;
+        const link = await Link.findOne({hash});
+        if(!link){
+            res.status(404).json({message:"Link not found"});
+            return;
+        }
+        if(link?.isPageLink){
+            const vault = await Vault.find({userId:link.userId})
+            res.status(200).json(vault);
+        }
+        else{
+            const vault = await Vault.findById(link?.resourceId);
+            if(!vault){
+                res.status(400).json({message:"Vault not found"});
+                return;
+            }
+            res.status(200).json(vault);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500)
+    }
+})
+
 
 
 app.listen(3000,()=>{
