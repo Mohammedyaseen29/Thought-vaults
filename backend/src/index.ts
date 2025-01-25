@@ -63,7 +63,7 @@ app.post("/api/v1/signin",async(req,res)=>{
             res.status(400).json({message:"Incorrect password!"});
             return;
         }
-        const token = jwt.sign({userId:existingUser?._id},jwt_secret,{expiresIn:'2d'});
+        const token = jwt.sign({userId:existingUser?._id},jwt_secret);
         res.status(200).json({token})
     } catch (error) {
         res.status(500).json({error})
