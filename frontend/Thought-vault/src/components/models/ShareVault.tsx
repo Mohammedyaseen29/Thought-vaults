@@ -12,17 +12,10 @@ import {
 import { Input } from "@/components/ui/input";
 
 export function ShareVault({ isOpen, onOpenChange }:any) {
-    const handleClose = () => {
-        onOpenChange(false);
-    };
-
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent
                 className="sm:max-w-md bg-[#1D2235] text-white border-none"
-                onOpenAutoFocus={(e) => e.preventDefault()}
-                onPointerDownOutside={(e) => e.preventDefault()}
-                onInteractOutside={(e) => e.preventDefault()}
             >
                 <DialogHeader>
                     <DialogTitle>Share link</DialogTitle>
@@ -44,7 +37,6 @@ export function ShareVault({ isOpen, onOpenChange }:any) {
                     </div>
                     <button
                         className="p-3 rounded-lg bg-purple-700 hover:bg-purple-600"
-                        onClick={(e) => e.stopPropagation()}
                     >
                         <span className="sr-only">Copy</span>
                         <Copy className="w-5 h-5" />
@@ -54,7 +46,6 @@ export function ShareVault({ isOpen, onOpenChange }:any) {
                     <DialogClose asChild>
                         <button
                             className="px-4 py-2 rounded hover:scale-95 bg-purple-700"
-                            onClick={handleClose}
                         >
                             Close
                         </button>

@@ -8,13 +8,27 @@ import DeleteVault from "./models/DeleteVault";
 const VerticalRounded = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+    const [isDeleteModalOpen,setIsDeleteModalOpen] = useState(false);
+    const [isEdit,setisEdit] = useState(false);
 
-    const handleShare = (e:any) => {
+    const handleShare = (e:React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
         e.stopPropagation();
         setIsDropdownOpen(false);
         setIsShareModalOpen(true);
     };
+    const handleEdit = (e:React.MouseEvent<HTMLDivElement>)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDropdownOpen(false);
+        setisEdit(true);
+    }
+    const handleDelete = (e:React.MouseEvent<HTMLDivElement>)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDropdownOpen(false);
+        setIsDeleteModalOpen(true);
+    }
 
     return (
         <>
@@ -36,17 +50,20 @@ const VerticalRounded = () => {
                             </div>
                         </div>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="focus:bg-transparent active:bg-transparent hover:bg-transparent">
-                        <div className="flex items-center group">
+                    <DropdownMenuItem className="focus:bg-transparent active:bg-transparent hover:bg-transparent" onSelect={(e)=>e.preventDefault()}>
+                        <div className="flex items-center group" onClick={handleEdit}>
                             <Pencil className="w-5 h-5 text-white font-bold group-hover:text-purple-500 mr-2" />
                             <p className="font-bold text-white group-hover:text-purple-500">Edit</p>
                         </div>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         className="focus:bg-transparent active:bg-transparent hover:bg-transparent"
-                        onSelect={(e) => e.preventDefault()}
+                        onSelect={(e)=>e.preventDefault()}
                     >
-                        <DeleteVault />
+                            <div className="flex items-center group" onClick={handleDelete}>
+                                <Trash2 className="w-5 h-5 text-white font-bold group-hover:text-rose-500 mr-2" />
+                                <p className="font-bold text-white group-hover:text-rose-500">Delete</p>
+                            </div>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -54,6 +71,10 @@ const VerticalRounded = () => {
             <ShareVault
                 isOpen={isShareModalOpen}
                 onOpenChange={setIsShareModalOpen}
+            />
+            <DeleteVault
+                isOpen={isDeleteModalOpen}
+                onOpenChange={setIsDeleteModalOpen}
             />
         </>
     );
