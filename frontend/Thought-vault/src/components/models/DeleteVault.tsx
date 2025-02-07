@@ -1,9 +1,20 @@
+import apiClient from "@/apiClient/apiClient";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 
-export default function DeleteVault({isOpen,onOpenChange}:any) {
-    
+
+export default function DeleteVault({ isOpen, onOpenChange, vaultId }:any) {
+    const navigate = useNavigate();
+    const handleDelete = async()=>{
+        try {
+            await apiClient.delete(`/vaults/${vaultId}`);
+            navigate(0);
+            onOpenChange(false);
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="bg-[#1D2235] border-none text-white">
@@ -15,7 +26,7 @@ export default function DeleteVault({isOpen,onOpenChange}:any) {
                     <DialogClose asChild>
                         <button className="px-4 py-2 bg-green-500 rounded hover:scale-95">Cancel</button>
                     </DialogClose>
-                    <button className="bg-red-500 px-4 py-2 rounded hover:scale-95">Delete</button>
+                    <button className="bg-red-500 px-4 py-2 rounded hover:scale-95" onClick={handleDelete}>Delete</button>
                 </div>
             </DialogContent>
         </Dialog>

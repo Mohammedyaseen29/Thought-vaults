@@ -102,7 +102,24 @@ app.post("/api/v1/vaults",async(req,res)=>{
         res.status(500).json({ message: "Internal Server Error" });
     }
 })
-app.put("/api/v1/vaults/:vaultId",async(req,res)=>{
+
+app.get("/api/v1/vaults/:vaultId",async(req,res)=>{
+    const {vaultId} = req.params;
+    const userId = req.userId;
+    try {
+        if(!vaultId){
+            res.status(400).json({message:"Vault id is required!"});
+            return;
+        }
+        const vault = await Vault.find({_id:vaultId,userId});
+        res.status(200).json(vault);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+})
+
+app.patch("/api/v1/vaults/:vaultId",async(req,res)=>{
     const {vaultId} = req.params;
     const userId = req.userId;
     const {name,description} = req.body;

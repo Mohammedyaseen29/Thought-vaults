@@ -26,7 +26,7 @@ export default function CreateContent({VaultId}:any) {
             console.log(response.data);
             reset();
             setIsOpen(false);
-            navigate(1);
+            navigate(0);
         } catch (error) {
             console.log(error);
         }

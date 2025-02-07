@@ -15,7 +15,7 @@ export default function VaultCard({id, title, description }: VaultCardProps) {
                     {title.charAt(0).toUpperCase()}
                 </div>
                 <div className="absolute top-1 right-1 flex justify-end cursor-pointer" onClick={(e)=>e.stopPropagation()}>
-                    <VerticalRounded/>
+                    <VerticalRounded id={id}/>
                 </div>
                 <h1 className="font-bold text-center text-lg sm:text-xl md:text-2xl text-white">{title}</h1>
                 <p className="text-sm sm:text-base text-slate-400 mt-2">{description}</p>

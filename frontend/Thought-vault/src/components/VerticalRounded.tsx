@@ -4,8 +4,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pencil, Share2, Trash2 } from "lucide-react";
 import { ShareVault } from "./models/ShareVault";
 import DeleteVault from "./models/DeleteVault";
+import EditVault from './models/EditVault';
 
-const VerticalRounded = () => {
+const VerticalRounded = ({id}:any) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isDeleteModalOpen,setIsDeleteModalOpen] = useState(false);
@@ -72,7 +73,13 @@ const VerticalRounded = () => {
                 isOpen={isShareModalOpen}
                 onOpenChange={setIsShareModalOpen}
             />
+            <EditVault
+                vaultId = {id}
+                isOpen = {isEdit}
+                onOpenChange = {setisEdit}
+            />
             <DeleteVault
+                vaultId = {id}
                 isOpen={isDeleteModalOpen}
                 onOpenChange={setIsDeleteModalOpen}
             />
