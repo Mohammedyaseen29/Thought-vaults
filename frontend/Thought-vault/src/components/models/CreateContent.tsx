@@ -3,25 +3,36 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Input } from "../ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { title } from "process";
 import { zodResolver } from "@hookform/resolvers/zod";
+import apiClient from "@/apiClient/apiClient";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 
-export default function CreateContent() {
+export default function CreateContent({VaultId}:any) {
+    const [isOpen,setIsOpen] = useState(false);
+    const navigate = useNavigate();
     const contentSchema = z.object({
         title : z.string().nonempty({message:"Title is required"}).min(3,"Title must atleast be 3 characters"),
-        description : z.string().optional(),
         link: z.string().nonempty({message:"Link is required"})
     })
     type contentField = z.infer<typeof contentSchema>;
     const {register,formState:{errors,isSubmitting},reset,handleSubmit} = useForm<contentField>({resolver:zodResolver(contentSchema)});
     const onSubmit:SubmitHandler<contentField> = async(data)=>{
         console.log(data);
-        reset();
+        try {
+            const response = await apiClient.post(`/vaults/${VaultId}/content`,data);
+            console.log(response.data);
+            reset();
+            setIsOpen(false);
+            navigate(1);
+        } catch (error) {
+            console.log(error);
+        }
     }
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
                 <button className="bg-[#921EE2] font-semibold px-4 py-2 rounded-lg hover:scale-95 flex items-center text-sm sm:text-base">
                     Create Content
@@ -36,9 +47,7 @@ export default function CreateContent() {
                     <label htmlFor="Title" className="text-white">Title</label>
                     <Input placeholder="Enter the title" className="ring-2" {...register("title",{required:"Title is required"})}/>
                     {errors.title && <p className="text-rose-500 mt-2 text-sm">{errors.title.message}</p>}
-                    <label htmlFor="Description" className="text-white">Description</label>
-                    <Input placeholder="Enter the Description" className="ring-2" />
-                    <label htmlFor="Description" className="text-white">Link</label>
+                    <label htmlFor="Link" className="text-white">Link</label>
                     <Input placeholder="Enter the link" className="ring-2" {...register("link", { required: "Link is required" })} />
                     {errors.link && <p className="text-rose-500 text-sm mt-2">{errors.link.message}</p>}
                     <DialogFooter>

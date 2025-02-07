@@ -23,8 +23,8 @@ const vaultSchema = new mongoose.Schema({
 export const Vault = mongoose.model("Vault",vaultSchema);
 
 const contentSchema = new mongoose.Schema({
-    link: {type:String,required:true},
-    title:{type:String,required:true},  
+    title:{type:String,required:true},
+    link: { type: String, required: true },  
     userId:{type:Types.ObjectId,ref:'User',required:true},
     vaultId:{type:Types.ObjectId,ref:"Vault",required:true}
 })

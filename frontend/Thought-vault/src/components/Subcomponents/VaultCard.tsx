@@ -2,13 +2,14 @@ import { Link } from "react-router-dom";
 import VerticalRounded from "../VerticalRounded";
 
 interface VaultCardProps {
+    id:string
     title: string;
     description?: string;
 }
 
-export default function VaultCard({ title, description }: VaultCardProps) {
+export default function VaultCard({id, title, description }: VaultCardProps) {
     return (
-        <Link to='/vault/5'>
+        <Link to={`/vault/${id}`}>
             <div className="relative p-6 sm:p-8 bg-[#1D2235] mt-2 rounded-2xl shadow hover:scale-95 transition">
                 <div className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 rounded-tl-xl rounded-br-xl bg-green-500 flex items-center justify-center text-xl sm:text-2xl font-bold">
                     {title.charAt(0).toUpperCase()}
@@ -21,4 +22,4 @@ export default function VaultCard({ title, description }: VaultCardProps) {
             </div>
         </Link>
     );
-}
+}   

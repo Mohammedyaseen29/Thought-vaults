@@ -42,7 +42,7 @@ export default function Space() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
                 {loading ? (<p className="font-bold text-center text-2xl text-gray-500">Loading...</p>):
                     data && data.length > 0 ? (data.map((vault) => (
-                        <VaultCard key={vault._id} title={vault.name} description={vault.description} />
+                        <VaultCard key={vault._id} id={vault._id} title={vault.name} description={vault.description} />
                     ))) : (<p className="text-center font-bold text-2xl text-purple-500">There is no Vault. Please Create a vault!</p>) }
             </div>
         </div>

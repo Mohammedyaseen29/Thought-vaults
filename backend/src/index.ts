@@ -159,12 +159,12 @@ app.get("/api/v1/vaults/:vaultId/content",async(req,res)=>{
 })
 
 app.post("/api/v1/vaults/:vaultId/content",async(req,res)=>{
-    const {name,link} = req.body;
+    const {title,link} = req.body;
     const {vaultId} = req.params;
     const userId = req.userId;
     try {
         const content = await Content.create({
-            name,
+            title,
             link,
             userId,
             vaultId
