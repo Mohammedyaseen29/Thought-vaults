@@ -9,10 +9,11 @@ import VerticalRounded from "./VerticalRounded";
 interface contentProps{
     title:string,
     link:string,
-    id:string
+    id:string,
+    vaultId:any,
 }
 
-export default function Content({title,link,id}:contentProps) {
+export default function Content({title,link,id,vaultId}:contentProps) {
     
     return (
             <div className="bg-[#1D2235] rounded-2xl p-8 shadow relative">
@@ -23,7 +24,7 @@ export default function Content({title,link,id}:contentProps) {
                     </a>
                 </div>
                 <div className="absolute top-2 right-0">
-                    <VerticalRounded id={id} type="content"/>
+                    <VerticalRounded vaultId={vaultId} id={id} type="content"/>
                 </div>
             </div>
     )

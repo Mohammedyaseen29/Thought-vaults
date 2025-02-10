@@ -111,7 +111,7 @@ app.get("/api/v1/vaults/:vaultId",async(req,res)=>{
             res.status(400).json({message:"Vault id is required!"});
             return;
         }
-        const vault = await Vault.find({_id:vaultId,userId});
+        const vault = await Vault.findOne({_id:vaultId,userId});
         res.status(200).json(vault);
     } catch (error) {
         console.log(error);
@@ -150,6 +150,7 @@ app.delete("/api/v1/vaults/:vaultId",async(req,res)=>{
             res.status(404).json({message:"vault not found"});
             return;
         }
+        await Content.deleteMany({vaultId,userId})
         await vault.deleteOne();
         res.status(200).json({message:"vault deleted successfully"})
     } catch (error) {
@@ -250,7 +251,13 @@ app.delete("/api/v1/vaults/:vaultId/content/:contentId",async(req,res)=>{
             res.status(400).json({ message: "ContentId is required" });
             return;
         }
-        const content = await Content.findOne({_id:contentId,userId,vaultId})
+        const content = await Content.findOne({_id:contentId,userId,vaultId});
+        if(!content){
+            res.status(404).json({message:"Content is not found"});
+            return;
+        }
+        await content.deleteOne();
+        res.status(200).json({message:"Content Deleted"})
     } catch (error) {
         console.log(error);
         res.status(500).json({error:"Internal server error"})

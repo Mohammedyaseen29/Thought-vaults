@@ -26,10 +26,6 @@ export default function Vault() {
                     <span className="text-sm font-bold hover:text-white text-slate-500 mr-1">/</span> 
                     <span className="text-sm font-bold hover:text-white text-slate-500 cursor-pointer">Contents</span>
                 </div>
-                <div className="flex items-center">
-                    <Share/>
-                    <BiDotsVerticalRounded className="w-8 h-8 text-white cursor-pointer" />
-                </div>
             </div>
             <div className="mt-16 flex flex-wrap justify-between items-center">
                 <div className="flex items-center space-x-2">
@@ -42,7 +38,7 @@ export default function Vault() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
                 {loading ? (<p className="font-bold text-center animate-pulse text-gray-500">Loading...</p>):
                     data && data.length > 0 ? (data.map((c:any)=>(
-                        <Content key={c._id} id={c._id} title={c.title} link={c.link}/>
+                        <Content key={c._id} vaultId={id} id={c._id} title={c.title} link={c.link}/>
                     ))) : (<p className="text-center font-bold text-purple-500 text-2xl">Please create Contents!</p>)
                 }
             </div>

@@ -8,41 +8,39 @@ import apiClient from "@/apiClient/apiClient";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useFetch from "@/hooks/useFetch";
 
 
-
-export default function EditContent({isOpen,onOpenChange,vaultId}:any) {
+export default function EditContent({isOpen,onOpenChange,vaultId,contentId}:any) {
     const navigate = useNavigate();
     const vaultSchema = z.object({
-        name: z.string().nonempty({message:"name is required"}).min(3, "name must be atleast 3 character"),
-        description : z.string().optional()
+        title: z.string().nonempty({message:"title is required"}).min(3, "title must be atleast 3 character"),
+        link: z.string().nonempty({ message: "Link is required" })
     })
     type vaultField = z.infer<typeof vaultSchema>;
-    const { register, formState: { errors, isSubmitting }, reset, handleSubmit,setValue} = useForm<vaultField>({resolver:zodResolver(vaultSchema)});
+    const { register, formState: { errors, isSubmitting }, handleSubmit,setValue} = useForm<vaultField>({resolver:zodResolver(vaultSchema)});
 
     async function fetchUpdatedVault() {
         try {
-            const response = await apiClient.get(`/vaults/${vaultId}`);
-            const data = response.data[0];
-            const {name,description} = data;
-            setValue("name",name);
-            setValue("description",description || " ");
+            const response = await apiClient.get(`/vaults/${vaultId}/content/${contentId}`);
+            const data = response.data;
+            const {title,link} = data;
+            setValue("title",title);
+            setValue("link",link);
         } catch (error) {
             console.log(error);
         }
     }
     useEffect(()=>{
-        if(isOpen && vaultId){
+        if(isOpen && contentId){
             fetchUpdatedVault();
         }
 
-    },[vaultId,isOpen])
+    },[contentId,isOpen])
 
     const onSubmit:SubmitHandler<vaultField> = async(data)=>{
         try {
             console.log(data);
-            await apiClient.patch(`/vaults/${vaultId}`,data);
+            await apiClient.patch(`/vaults/${vaultId}/content/${contentId}`,data);
             onOpenChange(false);
             navigate(0);
             toast.success("vault updated successfully!");
@@ -60,11 +58,11 @@ export default function EditContent({isOpen,onOpenChange,vaultId}:any) {
                             <DialogHeader>
                                 <DialogTitle className="text-center text-white text-2xl">Edit Content</DialogTitle>
                             </DialogHeader>
-                            <label htmlFor="Name" className="text-white">Name</label>
-                            <Input placeholder="Enter the Name" className="ring-2 text-black mt-2" {...register("name")} />
-                            {errors.name && <p className="text-rose-500 text-sm mt-1">{errors.name.message}</p>}
-                            <label htmlFor="Description" className="text-white">Description</label>
-                            <Input placeholder="Enter the Description" {...register("description")} className="ring-2 text-black mt-2" />
+                            <label htmlFor="Name" className="text-white">Title</label>
+                            <Input placeholder="Enter the Name" className="ring-2 text-black mt-2" {...register("title")} />
+                            {errors.title && <p className="text-rose-500 text-sm mt-1">{errors.title.message}</p>}
+                            <label htmlFor="Description" className="text-white">Link</label>
+                            <Input placeholder="Enter the Description" {...register("link")} className="ring-2 text-black mt-2" />
                             <DialogFooter>
                                 <button disabled={isSubmitting} type="submit" className="px-4 py-2 mt-3 rounded hover:scale-95 text-white bg-purple-800">{isSubmitting ? "Updating..." : "update"}</button>
                             </DialogFooter>

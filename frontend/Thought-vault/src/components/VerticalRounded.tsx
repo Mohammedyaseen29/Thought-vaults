@@ -10,10 +10,11 @@ import DeleteContent from './models/DeleteContent';
 
 interface VerticalRoundedProps{
     id:string,
-    type: "vault" | "content"
+    type: "vault" | "content",
+    vaultId?:string
 }
 
-const VerticalRounded = ({id,type}:VerticalRoundedProps) => {
+const VerticalRounded = ({id,type,vaultId}:VerticalRoundedProps) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isDeleteModalOpen,setIsDeleteModalOpen] = useState(false);
@@ -95,12 +96,14 @@ const VerticalRounded = ({id,type}:VerticalRoundedProps) => {
                 onOpenChange={setIsDeleteModalOpen}
             />
             <EditContent
-                vaultId = {id}
+                vaultId={vaultId}
+                contentId={id}
                 isOpen={isEditContentModal}
                 onOpenChange={setEditContentModal}
             />
             <DeleteContent
-                vaultId = {id}
+                vaultId={vaultId}
+                contentId={id}
                 isOpen = {isDeleteContentModal}
                 onOpenChange = {setDeleteContentModal}
             />

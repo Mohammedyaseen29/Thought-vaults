@@ -8,7 +8,6 @@ import apiClient from "@/apiClient/apiClient";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useFetch from "@/hooks/useFetch";
 
 
 
@@ -24,7 +23,7 @@ export default function EditVault({isOpen,onOpenChange,vaultId}:any) {
     async function fetchUpdatedVault() {
         try {
             const response = await apiClient.get(`/vaults/${vaultId}`);
-            const data = response.data[0];
+            const data = response.data;
             const {name,description} = data;
             setValue("name",name);
             setValue("description",description || " ");

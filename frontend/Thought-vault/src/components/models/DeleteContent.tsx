@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 
 
 
-export default function DeleteContent({ isOpen, onOpenChange, vaultId }:any) {
+export default function DeleteContent({ isOpen, onOpenChange, vaultId, contentId }:any) {
     const navigate = useNavigate();
     const handleDelete = async()=>{
         try {
-            await apiClient.delete(`/vaults/${vaultId}`);
+            await apiClient.delete(`/vaults/${vaultId}/content/${contentId}`);
             navigate(0);
             onOpenChange(false);
         } catch (error) {
