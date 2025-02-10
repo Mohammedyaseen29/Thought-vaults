@@ -5,12 +5,21 @@ import { Pencil, Share2, Trash2 } from "lucide-react";
 import { ShareVault } from "./models/ShareVault";
 import DeleteVault from "./models/DeleteVault";
 import EditVault from './models/EditVault';
+import EditContent from './models/EditContent';
+import DeleteContent from './models/DeleteContent';
 
-const VerticalRounded = ({id}:any) => {
+interface VerticalRoundedProps{
+    id:string,
+    type: "vault" | "content"
+}
+
+const VerticalRounded = ({id,type}:VerticalRoundedProps) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isDeleteModalOpen,setIsDeleteModalOpen] = useState(false);
     const [isEdit,setisEdit] = useState(false);
+    const [isEditContentModal,setEditContentModal] = useState(false);
+    const [isDeleteContentModal,setDeleteContentModal] = useState(false);
 
     const handleShare = (e:React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -22,13 +31,13 @@ const VerticalRounded = ({id}:any) => {
         e.preventDefault();
         e.stopPropagation();
         setIsDropdownOpen(false);
-        setisEdit(true);
+        type === 'vault' ? setisEdit(true) : setEditContentModal(true)
     }
     const handleDelete = (e:React.MouseEvent<HTMLDivElement>)=>{
         e.preventDefault();
         e.stopPropagation();
         setIsDropdownOpen(false);
-        setIsDeleteModalOpen(true);
+        type === "vault" ? setIsDeleteModalOpen(true) : setDeleteContentModal(true);
     }
 
     return (
@@ -38,19 +47,21 @@ const VerticalRounded = ({id}:any) => {
                     <BiDotsVerticalRounded className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-[#181b26] border-0">
-                    <DropdownMenuItem
-                        className="focus:bg-transparent active:bg-transparent hover:bg-transparent cursor-pointer"
-                        onSelect={(e) => {
-                            e.preventDefault();
-                        }}
-                    >
-                        <div onClick={handleShare} className="w-full">
-                            <div className="flex items-center group">
-                                <Share2 className="w-5 h-5 text-white font-bold group-hover:text-purple-500 mr-2" />
-                                <p className="font-bold text-white group-hover:text-purple-500">Share</p>
+                    {type === "vault" && (
+                        <DropdownMenuItem
+                            className="focus:bg-transparent active:bg-transparent hover:bg-transparent cursor-pointer"
+                            onSelect={(e) => {
+                                e.preventDefault();
+                            }}
+                        >
+                            <div onClick={handleShare} className="w-full">
+                                <div className="flex items-center group">
+                                    <Share2 className="w-5 h-5 text-white font-bold group-hover:text-purple-500 mr-2" />
+                                    <p className="font-bold text-white group-hover:text-purple-500">Share</p>
+                                </div>
                             </div>
-                        </div>
-                    </DropdownMenuItem>
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem className="focus:bg-transparent active:bg-transparent hover:bg-transparent" onSelect={(e)=>e.preventDefault()}>
                         <div className="flex items-center group" onClick={handleEdit}>
                             <Pencil className="w-5 h-5 text-white font-bold group-hover:text-purple-500 mr-2" />
@@ -82,6 +93,16 @@ const VerticalRounded = ({id}:any) => {
                 vaultId = {id}
                 isOpen={isDeleteModalOpen}
                 onOpenChange={setIsDeleteModalOpen}
+            />
+            <EditContent
+                vaultId = {id}
+                isOpen={isEditContentModal}
+                onOpenChange={setEditContentModal}
+            />
+            <DeleteContent
+                vaultId = {id}
+                isOpen = {isDeleteContentModal}
+                onOpenChange = {setDeleteContentModal}
             />
         </>
     );

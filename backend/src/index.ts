@@ -191,15 +191,71 @@ app.post("/api/v1/vaults/:vaultId/content",async(req,res)=>{
         res.status(500).json(error)
     }
 })
-app.put("/api/v1/vaults/:vaultId/content/:contentId",(req,res)=>{
-    const {name,link} = req.body;
-    const userId = req.userId;
-    const {vaultId,contentId} = req.params;
-    
+
+app.get("/api/v1/vaults/:vaultId/content/:contentId",async(req,res)=>{
+    try {
+        const {vaultId,contentId} = req.params;
+        const userId = req.userId;
+        const content = await Content.findOne({_id:contentId,userId,vaultId});
+        if(!content){
+            res.status(404).json({message:"Content not found!"})
+            return;
+        }
+        res.status(200).json(content);
+    } catch (error) {
+        console.log(error);
+    }
 })
 
-app.delete("/api/v1/vaults/:vaultId/content/:contentId",(req,res)=>{
+app.patch("/api/v1/vaults/:vaultId/content/:contentId",async(req,res)=>{
+    try {
+        const { title, link } = req.body;
+        const userId = req.userId;
+        const { vaultId, contentId } = req.params;
+        if(!vaultId){
+            res.status(400).json({message:"VaultId is required"})
+            return;
+        }
+        if(!contentId){
+            res.status(400).json({message:"contentId is required"})
+        }
+        const content = await Content.findOne({_id:contentId,userId,vaultId});
+        if(!content){
+            res.status(404).json({message:"Content not found!"});
+            return;
+        }
+        if(title){
+            content.title = title;
+        }
+        if(link){
+            content.link = link;
+        }
+        await content.save();
+        res.status(200).json({message:"Content updated"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Internal server error!"})
+    }
+})
 
+app.delete("/api/v1/vaults/:vaultId/content/:contentId",async(req,res)=>{
+    try {
+        const {vaultId,contentId} = req.params;
+        const userId = req.userId;
+        if(!vaultId){
+            res.status(400).json({message:"VaultId is required"});
+            return;
+        }
+        if(!contentId){
+            res.status(400).json({ message: "ContentId is required" });
+            return;
+        }
+        const content = await Content.findOne({_id:contentId,userId,vaultId})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Internal server error"})
+        
+    }
 })
 
 app.post("/api/v1/thought/share-vault",async(req,res)=>{

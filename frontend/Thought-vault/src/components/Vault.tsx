@@ -42,7 +42,7 @@ export default function Vault() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
                 {loading ? (<p className="font-bold text-center animate-pulse text-gray-500">Loading...</p>):
                     data && data.length > 0 ? (data.map((c:any)=>(
-                        <Content key={c._id} title={c.title} link={c.link}/>
+                        <Content key={c._id} id={c._id} title={c.title} link={c.link}/>
                     ))) : (<p className="text-center font-bold text-purple-500 text-2xl">Please create Contents!</p>)
                 }
             </div>

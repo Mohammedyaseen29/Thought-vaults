@@ -29,7 +29,7 @@ const contentSchema = new mongoose.Schema({
     vaultId:{type:Types.ObjectId,ref:"Vault",required:true}
 })
 
-export const Content = mongoose.model("Content",contentSchema);
+export const    Content = mongoose.model("Content",contentSchema);
 
 const linkSchema = new mongoose.Schema({
     hash : {type:String,required:true,unique:true},
