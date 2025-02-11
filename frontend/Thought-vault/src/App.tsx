@@ -5,6 +5,7 @@ import Thoughts from "./components/Thoughts"
 import Landing from "./components/Landing"
 import Vault from "./components/Vault"
 import ProtectedRoute from "./components/ProtectedRoute"
+import SharePage from "./components/SharePage"
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/thoughts" element={<Thoughts />} />
           <Route path="/vault/:id" element={<Vault />} />
         </Route>
+        <Route path="/thought/:hash" element={<SharePage/>}/>
       </Routes>
     </BrowserRouter>
   )

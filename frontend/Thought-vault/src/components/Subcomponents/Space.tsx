@@ -10,6 +10,10 @@ interface Vault {
     _id: string;
     name: string;
     description: string;
+    userId: {
+        _id: string;
+        name: string;
+    };
 }
 
 export default function Space() {
@@ -23,11 +27,11 @@ export default function Space() {
     return (
         <div className="p-4 w-full">
             <div className="flex flex-wrap justify-end items-center space-y-2 sm:space-y-0">
-                <Share />
+                <Share/>
             </div>
 
             <div className="mt-5">
-                <h1 className="text-white font-bold text-3xl sm:text-4xl">Hello Yaseen!👋</h1>
+                <h1 className="text-white font-bold text-3xl sm:text-4xl">Hello {data?.[0]?.userId.name}!👋</h1>
                 <p className="text-sm text-slate-400 mt-1">Here is your list of vaults!</p>
             </div>
 

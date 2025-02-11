@@ -76,7 +76,7 @@ app.use(auth);
 app.get("/api/v1/vaults",async(req,res)=>{
     try {
         const userId = req.userId;
-        const vaults = await Vault.find({userId});
+        const vaults = await Vault.find({userId}).populate("userId","name");
         res.status(200).json(vaults);
     } catch (error) {
         console.error("Error fetching vaults:", error);
@@ -304,7 +304,7 @@ app.post("/api/v1/thought/share-vault",async(req,res)=>{
     }
 })
 
-app.post("api/v1/thought/share-page",async(req,res)=>{
+app.post("/api/v1/thought/share-page",async(req,res)=>{
     try {
         const userId = req.userId;
         const existingLink = await Link.findOne({userId,isPageLink:true});

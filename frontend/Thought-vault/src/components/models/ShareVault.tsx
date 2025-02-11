@@ -1,5 +1,5 @@
-import React from 'react';
-import { Copy, Share2 } from "lucide-react";
+import React, { useEffect, useState } from 'react';
+import { Check, Copy, Share2 } from "lucide-react";
 import {
     Dialog,
     DialogClose,
@@ -10,8 +10,34 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import apiClient from '@/apiClient/apiClient';
 
-export function ShareVault({ isOpen, onOpenChange }:any) {
+export function ShareVault({ isOpen, onOpenChange, vaultId }:any) {
+    const [link, setLink] = useState("https://thoughtVault.com/share/A12maeijfenv0");
+    const [copy,setCopy] = useState(false);
+    async function handleCopy() {
+        try {
+            await navigator.clipboard.writeText(link);
+            setCopy(true);
+            setTimeout(()=>setCopy(false),1500)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async function fetchVaultShareableLink(){
+        try {
+            const response = await apiClient.post('/thought/share-vault',{vaultId});
+            setLink(response.data.shareableLink);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(()=>{
+        if(isOpen && vaultId){
+            fetchVaultShareableLink();
+        }
+    },[isOpen,vaultId])
+
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent
@@ -30,16 +56,17 @@ export function ShareVault({ isOpen, onOpenChange }:any) {
                         </label>
                         <Input
                             id="link"
-                            defaultValue="https://ui.shadcn.com/docs/installation"
+                            value={link}
                             readOnly
                             className="text-black"
                         />
                     </div>
                     <button
                         className="p-3 rounded-lg bg-purple-700 hover:bg-purple-600"
+                        onClick={handleCopy}
                     >
                         <span className="sr-only">Copy</span>
-                        <Copy className="w-5 h-5" />
+                        {copy ? (<Check className="w-5 h-5" />) : (<Copy className="w-5 h-5" />)}
                     </button>
                 </div>
                 <DialogFooter className="sm:justify-start">

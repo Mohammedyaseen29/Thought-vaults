@@ -82,6 +82,7 @@ const VerticalRounded = ({id,type,vaultId}:VerticalRoundedProps) => {
             </DropdownMenu>
 
             <ShareVault
+                vaultId = {id}
                 isOpen={isShareModalOpen}
                 onOpenChange={setIsShareModalOpen}
             />

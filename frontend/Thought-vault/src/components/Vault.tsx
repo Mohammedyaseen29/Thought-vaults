@@ -1,9 +1,8 @@
-import { BiDotsVerticalRounded } from "react-icons/bi";
+
 import { LuBrainCircuit } from "react-icons/lu";
 import { Link, useParams } from "react-router-dom";
 import Content from "./Content";
 import CreateContent from "./models/CreateContent";
-import { Share } from "./models/Share";
 import apiClient from "@/apiClient/apiClient";
 import useFetch from "@/hooks/useFetch";
 
