@@ -4,8 +4,11 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import { Link, useNavigate } from 'react-router-dom'
 import apiClient from '@/apiClient/apiClient'
 import {toast, ToastContainer} from "react-toastify";
+import { useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 
 export default function SignIn() {
+    const [showPassword ,setShowPassword] = useState(false);
     const formSchema = z.object({
         email:z.string().email("Invalid Email"),
         password: z.string().min(8, "Password must be alteast 8 character").regex(/[a-z]/, "Password must contain at least one lowercase letter").regex(/[A-Z]/, "Password must contain at least one uppercase letter").regex(/\d/, "Password must contain at least one number").regex(/[\W_]/, "Password must contain at least one Special character"),
@@ -42,12 +45,20 @@ export default function SignIn() {
                     />
                     <br />
                     {errors.email && (<div className='text-red-500'>{errors.email.message}</div>)}
-                    <input
-                        type="password"
-                        placeholder="Enter the Password"
-                        className="p-2 rounded mt-4 w-full text-black outline-none"
-                        {...register("password")}
-                    />
+                    <div className="relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter the Password"
+                            className="p-2 rounded mt-4 w-full text-black outline-none"
+                            {...register("password")}
+                        />
+                        <button className="absolute top-6 right-2 cursor-pointer" onClick={(e) => {
+                            e.preventDefault();
+                            setShowPassword((prev) => !prev)
+                        }}>
+                            {showPassword ? (<EyeOff className="text-gray-600" />) : (<Eye className="text-gray-600" />)}
+                        </button>
+                    </div>
                     <br />
                     {errors.password && (<div className='text-red-500'>{errors.password.message}</div>)}
                     <div className="flex justify-center">

@@ -70,6 +70,33 @@ app.post("/api/v1/signin",async(req,res)=>{
     }
 })
 
+
+app.get("/api/v1/thought/:hash", async (req, res) => {
+    try {
+        const { hash } = req.params;
+        const link = await Link.findOne({ hash });
+        if (!link) {
+            res.status(404).json({ message: "Link not found" });
+            return;
+        }
+        if (link?.isPageLink) {
+            const vault = await Vault.find({ userId: link.userId }).populate({path: 'contents',model:'Content',select:'title link _id'})
+            res.status(200).json(vault);
+        }
+        else {
+            const vault = await Vault.findById(link?.resourceId).populate({ path: 'contents', model: 'Content',select: 'title link _id'});
+            if (!vault) {
+                res.status(400).json({ message: "Vault not found" });
+                return;
+            }
+            res.status(200).json(vault);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Internal Server Error"})
+    }
+})
+
 app.use(auth);
 
 
@@ -187,6 +214,7 @@ app.post("/api/v1/vaults/:vaultId/content",async(req,res)=>{
             userId,
             vaultId
         })
+        await Vault.findByIdAndUpdate(vaultId,{$push:{contents:content._id}},{new:true})
         res.status(200).json(content);
     } catch (error) {
         res.status(500).json(error)
@@ -257,6 +285,7 @@ app.delete("/api/v1/vaults/:vaultId/content/:contentId",async(req,res)=>{
             return;
         }
         await content.deleteOne();
+        await Vault.findByIdAndUpdate(vaultId,{$pull:{contents:content._id}});
         res.status(200).json({message:"Content Deleted"})
     } catch (error) {
         console.log(error);
@@ -283,7 +312,7 @@ app.post("/api/v1/thought/share-vault",async(req,res)=>{
         if(existingLink){
             res.status(200).json({
                 message:"Sharing link for the vault already Exist!",
-                shareableLink:`${req.protocol}://${req.get("host")}/api/v1/thought/${existingLink.hash}`
+                shareableLink:`${req.protocol}://localhost:5173/thoughts/${existingLink.hash}`
             })
             return;
         }
@@ -294,7 +323,7 @@ app.post("/api/v1/thought/share-vault",async(req,res)=>{
             userId,
             resourceId:vaultId
         })
-        const shareableLink = `${req.protocol}://${req.get("host")}/api/v1/thought/${hash}`
+        const shareableLink = `${req.protocol}://localhost:5173/thoughts/${hash}`
 
         res.status(201).json({message:"Vault Shareable link is Created Successfully",shareableLink})
 
@@ -311,7 +340,7 @@ app.post("/api/v1/thought/share-page",async(req,res)=>{
         if(existingLink){
             res.status(200).json({
                 message:"Page link is already exist!",
-                shareableLink:`${req.protocol}://${req.get("host")}/api/v1/thought/${existingLink.hash}`
+                shareableLink: `${req.protocol}://localhost:5173/thoughts/${existingLink.hash}`
             })
             return;
         }
@@ -321,7 +350,7 @@ app.post("/api/v1/thought/share-page",async(req,res)=>{
             hash,
             isPageLink:true,
         })
-        const shareableLink = `${req.protocol}://${req.get("host")}/api/v1/thought/${hash}`
+        const shareableLink = `${req.protocol}://localhost:5173/thoughts/${hash}`
         res.status(201).json({message:"Shareable link for this page is created!",shareableLink})
     } catch (error) {
         console.log(error);
@@ -330,33 +359,6 @@ app.post("/api/v1/thought/share-page",async(req,res)=>{
 })
 
 
-
-
-app.get("/api/v1/thought/:hash",async(req,res)=>{
-    try {
-        const {hash} = req.params;
-        const link = await Link.findOne({hash});
-        if(!link){
-            res.status(404).json({message:"Link not found"});
-            return;
-        }
-        if(link?.isPageLink){
-            const vault = await Vault.find({userId:link.userId})
-            res.status(200).json({userId:link.userId,vault});
-        }
-        else{
-            const vault = await Vault.findById(link?.resourceId);
-            if(!vault){
-                res.status(400).json({message:"Vault not found"});
-                return;
-            }
-            res.status(200).json(vault);
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500)
-    }
-})
 
 
 

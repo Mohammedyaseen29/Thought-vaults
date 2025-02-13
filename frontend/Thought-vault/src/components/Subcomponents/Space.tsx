@@ -31,7 +31,7 @@ export default function Space() {
             </div>
 
             <div className="mt-5">
-                <h1 className="text-white font-bold text-3xl sm:text-4xl">Hello {data?.[0]?.userId.name}!👋</h1>
+                <h1 className="text-white font-bold text-3xl sm:text-4xl">Hello {data?.[0]?.userId.name || "champ"}!👋</h1>
                 <p className="text-sm text-slate-400 mt-1">Here is your list of vaults!</p>
             </div>
 
@@ -51,6 +51,7 @@ export default function Space() {
                         <VaultCard
                             key={vault._id}
                             id={vault._id}
+                            type="vault"
                             title={vault.name}
                             description={vault.description}
                         />

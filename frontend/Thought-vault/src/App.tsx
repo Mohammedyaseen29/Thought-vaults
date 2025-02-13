@@ -6,6 +6,7 @@ import Landing from "./components/Landing"
 import Vault from "./components/Vault"
 import ProtectedRoute from "./components/ProtectedRoute"
 import SharePage from "./components/SharePage"
+import ShareContents from "./components/ShareContents"
 
 
 function App() {
@@ -19,7 +20,8 @@ function App() {
           <Route path="/thoughts" element={<Thoughts />} />
           <Route path="/vault/:id" element={<Vault />} />
         </Route>
-        <Route path="/thought/:hash" element={<SharePage/>}/>
+        <Route path="/vault/share/:id" element={<ShareContents/>} />
+        <Route path="/thoughts/:hash" element={<SharePage/>}/>
       </Routes>
     </BrowserRouter>
   )

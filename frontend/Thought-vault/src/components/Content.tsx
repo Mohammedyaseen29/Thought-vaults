@@ -10,10 +10,11 @@ interface contentProps{
     title:string,
     link:string,
     id:string,
-    vaultId:any,
+    type:"share" | "content"
+    vaultId?:any,
 }
 
-export default function Content({title,link,id,vaultId}:contentProps) {
+export default function Content({title,type,link,id,vaultId}:contentProps) {
     
     return (
             <div className="bg-[#1D2235] rounded-2xl p-8 shadow relative">
@@ -24,7 +25,7 @@ export default function Content({title,link,id,vaultId}:contentProps) {
                     </a>
                 </div>
                 <div className="absolute top-2 right-0">
-                    <VerticalRounded vaultId={vaultId} id={id} type="content"/>
+                {type === "content" && (<VerticalRounded vaultId={vaultId} id={id} type="content" />)}
                 </div>
             </div>
     )
